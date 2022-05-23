@@ -12,7 +12,7 @@ sel = selectors.DefaultSelector()
 
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Should be ready to read
-    print("accepted connection from", addr)
+    print("[SERVER::SERVER] accepted connection from", addr)
     conn.setblocking(False)
     message = libserver.Message(sel, conn, addr)
     sel.register(conn, selectors.EVENT_READ, data=message)
@@ -20,18 +20,19 @@ def accept_wrapper(sock):
 
 def main():
 
-    if len(sys.argv) != 3:
-        print("usage:", sys.argv[0], "<host> <port>")
-        sys.exit(1)
+    config = {
+        "host": "127.42.0.1",
+        "port": 5201,
+    }
 
-    host, port = sys.argv[1], int(sys.argv[2])
+    host, port = config["host"], config["port"]
     lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Avoid bind() exception: OSError: [Errno 48] Address already in use
     lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     lsock.bind((host, port))
     lsock.listen()
-    print("listening on", (host, port))
+    print("[SERVER::SERVER] Listening on", (host, port))
     lsock.setblocking(False)
     sel.register(lsock, selectors.EVENT_READ, data=None)
 
@@ -47,12 +48,12 @@ def main():
                         message.process_events(mask)
                     except Exception:
                         print(
-                            "main: error: exception for",
+                            "[SERVER::SERVER] Main: error: exception for",
                             f"{message.addr}:\n{traceback.format_exc()}",
                         )
                         message.close()
     except KeyboardInterrupt:
-        print("caught keyboard interrupt, exiting")
+        print("[SERVER::SERVER] Caught keyboard interrupt, exiting")
     finally:
         sel.close()
 
