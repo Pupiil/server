@@ -21,7 +21,7 @@ def main():
 
     config = {
         "host": "127.42.0.1",
-        "port": 5202,
+        "port": 5205,
     }
 
     host, port = config["host"], config["port"]
