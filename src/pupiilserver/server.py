@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import socket
 import selectors
 import traceback
 
-from pupiilcommon import libserver
+import pupiilcommon
 
 sel = selectors.DefaultSelector()
 
@@ -14,7 +13,7 @@ def accept_wrapper(sock):
     conn, addr = sock.accept()  # Should be ready to read
     print("[SERVER::SERVER] accepted connection from", addr)
     conn.setblocking(False)
-    message = libserver.Message(sel, conn, addr)
+    message = pupiilcommon.LibServer.Message(sel, conn, addr)
     sel.register(conn, selectors.EVENT_READ, data=message)
 
 
@@ -22,7 +21,7 @@ def main():
 
     config = {
         "host": "127.42.0.1",
-        "port": 5201,
+        "port": 5202,
     }
 
     host, port = config["host"], config["port"]
