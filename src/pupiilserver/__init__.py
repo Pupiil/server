@@ -5,12 +5,4 @@ pupiil_server.__init__
 - License: MIT LICENSE
 """
 
-from . import server
-"""
-pupiil_server.__init__
-~~~~~~~~~~~~~~~~~~
-
-- License: MIT LICENSE
-"""
-
-from . import server
+from . import server  # noqa: F401
